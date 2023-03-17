@@ -9,3 +9,32 @@ services:
       dockerfile: docker/Dockerfile
     ports:
       - 8080:80
+
+  mariadb:
+    container_name: laravel-mariadb
+    image: mariadb:10.7
+    volumes:
+      - mariadb:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - '${DB_PORT:-3306}:3306'
+
+  phpmyadmin:
+    container_name: laravel-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8081:80'
+    environment:
+      PMA_HOST: mariadb
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb:
+    driver: 'local'
