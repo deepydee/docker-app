@@ -4,23 +4,28 @@ services:
   app:
     image: laravel-www
     container_name: laravel-www
-    volumes:
-      - .:/var/www/html
+    restart: unless-stopped
     build:
+      args:
+          user: sammy
+          uid: 1000
       context: .
       dockerfile: docker/Dockerfile
+    working_dir: /var/www/html
     ports:
       - 8080:80
+    volumes:
+      - .:/var/www/html
 
   mariadb:
     container_name: laravel-mariadb
     image: mariadb:10.7
     volumes:
       - mariadb:/var/lib/mysql
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_USER: ${DB_USERNAME}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
@@ -29,6 +34,7 @@ services:
   redis:
     container_name: laravel-redis
     image: redis:4-alpine
+    restart: unless-stopped
     ports:
       - '${REDIS_PORT:-6379}:6379'
     volumes:
@@ -37,7 +43,7 @@ services:
   phpmyadmin:
     container_name: laravel-phpmyadmin
     image: phpmyadmin/phpmyadmin
-    restart: always
+    restart: unless-stopped
     ports:
       - '8081:80'
     environment:
