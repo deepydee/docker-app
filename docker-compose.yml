@@ -4,6 +4,8 @@ services:
   app:
     image: laravel-www
     container_name: laravel-www
+    volumes:
+      - .:/var/www/html
     build:
       context: .
       dockerfile: docker/Dockerfile
@@ -24,6 +26,14 @@ services:
     ports:
       - '${DB_PORT:-3306}:3306'
 
+  redis:
+    container_name: laravel-redis
+    image: redis:4-alpine
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - redis:/data
+
   phpmyadmin:
     container_name: laravel-phpmyadmin
     image: phpmyadmin/phpmyadmin
@@ -37,4 +47,6 @@ services:
 
 volumes:
   mariadb:
+    driver: 'local'
+  redis:
     driver: 'local'
