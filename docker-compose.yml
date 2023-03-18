@@ -12,14 +12,47 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     working_dir: /var/www/html
+    depends_on:
+      - mariadb
+      - redis
     ports:
       - 8080:80
     volumes:
       - .:/var/www/html
     env_file:
-    - .docker.env
+      - .docker.env
+    environment:
+      CONTAINER_ROLE: app
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+  scheduler:
+    image: laravel-www
+    container_name: laravel-scheduler
+    depends_on:
+      - app
+      - mariadb
+      - redis
+    env_file:
+    - .docker.env
+    volumes:
+      - .:/var/www/html
+    environment:
+      CONTAINER_ROLE: scheduler
+
+  queue:
+    image: laravel-www
+    container_name: laravel-queue
+    depends_on:
+      - app
+      - mariadb
+      - redis
+    env_file:
+    - .docker.env
+    volumes:
+      - .:/var/www/html
+    environment:
+      CONTAINER_ROLE: queue
 
   mariadb:
     container_name: laravel-mariadb
