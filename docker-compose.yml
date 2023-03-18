@@ -16,6 +16,10 @@ services:
       - 8080:80
     volumes:
       - .:/var/www/html
+    env_file:
+    - .docker.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mariadb:
     container_name: laravel-mariadb
