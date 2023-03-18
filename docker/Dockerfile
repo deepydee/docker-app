@@ -12,14 +12,17 @@ RUN docker-php-ext-install pdo_mysql \
 COPY . /var/www/html
 COPY docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/config/php/conf.d/*.ini "${PHP_INI_DIR}/conf.d/"
+COPY docker/start.sh /usr/local/bin/start
 
 RUN mkdir -p /home/$user \
     && useradd -G www-data,root -u $uid -d /home/$user $user \
     && chown -R $user:$user /home/$user \
-    && chmod -R 755 storage/
+    && chown -R $user:$user "${PHP_INI_DIR}/conf.d/" \
+    && chmod -R 755 storage/ \
+    && chmod +x /usr/local/bin/start
 
-WORKDIR /var/www/html
+RUN php artisan config:clear
 
 USER $user
 
-RUN php artisan config:clear
+CMD ["/usr/local/bin/start"]
