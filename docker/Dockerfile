@@ -3,10 +3,15 @@ FROM php:8.2-apache-buster
 ARG user
 ARG uid
 
-# ENV PATH="./vendor/bin:$PATH"
+ENV PATH="./vendor/bin:$PATH" \
+    PHP_OPCACHE_VALIDATE_TIMESTAMPS=0 \
+    PHP_OPCACHE_MAX_ACCELERATED_FILES=8000 \
+    PHP_OPCACHE_MEMORY_CONSUMPTION=128
+
 
 RUN docker-php-ext-install pdo_mysql \
-    && pecl install xdebug && docker-php-ext-enable xdebug \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug opcache\
     && a2enmod rewrite
 
 COPY . /var/www/html
