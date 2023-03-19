@@ -13,6 +13,7 @@ COPY . /var/www/html
 COPY docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY docker/config/php/conf.d/*.ini "${PHP_INI_DIR}/conf.d/"
 COPY docker/start.sh /usr/local/bin/start
+COPY docker/config/php/php.ini /usr/local/etc/php/php.ini
 
 RUN mkdir -p /home/$user \
     && useradd -G www-data,root -u $uid -d /home/$user $user \
