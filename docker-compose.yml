@@ -92,7 +92,7 @@ services:
     image: mailhog/mailhog
     container_name: laravel-mailhog
     ports:
-      - '${MAIL_PORT}-1025:1025'
+      - '${MAIL_PORT-1025}:1025'
       - '8025:8025'
 
   npm:
