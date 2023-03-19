@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PodcastController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,5 +20,11 @@ Route::get('/', function () {
 });
 
 Route::get('/hello', function () {
-    return 'Hello World';
+    return 'Hello World!';
 });
+
+Route::get('/hi', function () {
+    return 'Hi';
+});
+
+Route::get('/podcasts', [PodcastController::class, 'index']);
