@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PodcastController;
+use App\Mail\HelloMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    app('log')->info('Welcome');
+    // app('log')->info('Welcome');
     return view('welcome');
 });
 
@@ -24,7 +26,8 @@ Route::get('/hello', function () {
 });
 
 Route::get('/hi', function () {
+    Mail::to('a@b.com')->send(new HelloMail());
     return 'Hi';
 });
 
-Route::get('/podcasts', [PodcastController::class, 'index']);
+// Route::get('/podcasts', [PodcastController::class, 'index']);
